@@ -102,7 +102,7 @@
     <script>
         // initialize basemmap
         mapboxgl.accessToken =
-            'pk.eyJ1IjoiamFrb2J6aGFvIiwiYSI6ImNpcms2YWsyMzAwMmtmbG5icTFxZ3ZkdncifQ.P9MBej1xacybKcDN_jehvw';
+            'sk.eyJ1IjoibXlrZW56aWVoaXJhdGEiLCJhIjoiY2xzMTV3cnZqMDgydzJrcDV5aGl5YXY1aSJ9.IvtdbraI0OSjJXWhNiIJ7w';
         const map = new mapboxgl.Map({
             container: 'map', // container ID
             style: 'mapbox://styles/mapbox/light-v10', // style URL
