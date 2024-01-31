@@ -118,7 +118,7 @@
             map.on('load', function loadingData() {
                 map.addSource('us-covid-2020-counts', {
                     type: 'geojson',
-                    data: us-covid-2020-counts
+                    data: state_data
                 });
 
                 map.addLayer({
