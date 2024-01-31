@@ -112,19 +112,19 @@
 
         // load data and add as layer
         async function geojsonFetch() {
-            let response = await fetch('assets/us-covid-2020-counts.geojson');
+            let response = await fetch('assets/us-covid-2020-rates.geojson');
             let state_data = await response.json();
 
             map.on('load', function loadingData() {
-                map.addSource('us-covid-2020-counts', {
+                map.addSource('us-covid-2020-rates', {
                     type: 'geojson',
                     data: state_data
                 });
 
                 map.addLayer({
-                    'id': 'us-covid-2020-counts_layer',
+                    'id': 'us-covid-2020-rats_layer',
                     'type': 'fill',
-                    'source': 'us-covid-2020-counts',
+                    'source': 'us-covid-2020-rates',
                     'paint': {
                         'fill-color': [
                             'step',
