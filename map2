@@ -89,7 +89,7 @@
             // add a source of the data and then add the layer out of the source
             map.addSource('us-covid-2020-counts', {
                 type: 'geojson',
-                data: 'assets/us-covid-2020-counts.geojson'
+                data: 'assets/us-covid-2020-counts.json'
             });
             map.addLayer({
                 'id': 'covid-point',
@@ -99,7 +99,7 @@
                 'paint': {
                     // increase the radii of the circle as mag value increases
                     'circle-radius': {
-                        'property': 'mag',
+                        'property': 'cases',
                         'stops': [
                             [grades[0], radii[0]],
                             [grades[1], radii[1]],
@@ -108,7 +108,7 @@
                     },
                     // change the color of the circle as mag value increases
                     'circle-color': {
-                        'property': 'mag',
+                        'property': 'cases',
                         'stops': [
                             [grades[0], colors[0]],
                             [grades[1], colors[1]],
@@ -124,7 +124,7 @@
             map.on('click', 'covid-point', (event) => {
                 new mapboxgl.Popup()
                     .setLngLat(event.features[0].geometry.coordinates)
-                    .setHTML(`<strong>Magnitude:</strong> ${event.features[0].properties.mag}`)
+                    .setHTML(`<strong>Magnitude:</strong> ${event.features[0].properties.cases}`)
                     .addTo(map);
             });
         });
