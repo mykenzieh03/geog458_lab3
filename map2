@@ -92,7 +92,7 @@
                 data: 'assets/us-covid-2020-counts.json'
             });
             map.addLayer({
-                'id': 'covid-point',
+                'id': 'us-covid-2020-counts-point',
                 'type': 'circle',
                 'source': 'us-covid-2020-counts',
                 'minzoom': 5,
@@ -121,7 +121,7 @@
                 }
             });
             // click on tree to view magnitude in a popup
-            map.on('click', 'covid-point', (event) => {
+            map.on('click', 'us-covid-2020-counts-point', (event) => {
                 new mapboxgl.Popup()
                     .setLngLat(event.features[0].geometry.coordinates)
                     .setHTML(`<strong>Magnitude:</strong> ${event.features[0].properties.cases}`)
