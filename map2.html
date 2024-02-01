@@ -124,14 +124,14 @@
             map.on('click', 'us-covid-2020-counts-point', (event) => {
                 new mapboxgl.Popup()
                     .setLngLat(event.features[0].geometry.coordinates)
-                    .setHTML(`<strong>Magnitude:</strong> ${event.features[0].properties.mag}`)
+                    .setHTML(`<strong>cases:</strong> ${event.features[0].properties.cases}`)
                     .addTo(map);
             });
         });
         // create legend
         const legend = document.getElementById('legend');
         //set up legend grades and labels
-        var labels = ['<strong>Magnitude</strong>'],
+        var labels = ['<strong>cases</strong>'],
             vbreak;
         //iterate through grades and create a scaled circle and label for each
         for (var i = 0; i < grades.length; i++) {
