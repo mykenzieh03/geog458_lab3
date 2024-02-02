@@ -3,18 +3,13 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Interactive Web Mapping</title>
+    <title>US Covid-19 Rates in 2020</title>
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
-
-    <!-- Including the Mapbox GL CSS file -->
-    <link href="https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.css" rel="stylesheet">
-
-    <!-- Including the Mapbox GL JS file -->
-    <script src="https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.js"></script>
-
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.js"></script>
     <style>
-        /* CSS styles for heading and paragraphs */
-        h2,
+                /* CSS styles for heading and paragraphs */
+                h2,
         h3 {
             margin: 10px;
             font-size: 18px;
@@ -93,44 +88,43 @@
 <body>
     <div id="map"></div>
     <div class='map-overlay' id='features'>
-        <h2>US population density</h2>
+        <h2>US Covid Cases 2020</h2>
         <div id='text-description'>
-            <p>Hover over a state!</p>
+            <p>Covid Cases in the US 2020</p>
         </div>
     </div>
     <div class='map-overlay' id='legend'></div>
     <script>
-        // initialize basemmap
-        mapboxgl.accessToken =
-            'pk.eyJ1IjoibXlrZW56aWVoaXJhdGEiLCJhIjoiY2xqaGozdTQ2MDRmbzNzcjRyYWhscnZodiJ9.XYzH2mzs4ew_Kc16m-XvxQ';
+        mapboxgl.accessToken = 'pk.eyJ1IjoiamFrb2J6aGFvIiwiYSI6ImNpcms2YWsyMzAwMmtmbG5icTFxZ3ZkdncifQ.P9MBej1xacybKcDN_jehvw';
+
         const map = new mapboxgl.Map({
             container: 'map', // container ID
             style: 'mapbox://styles/mapbox/light-v10', // style URL
             zoom: 3, // starting zoom
-            center: [-100, 40] // starting center
+            center: [-100, 40], // starting center
+            projection: 'albers'
         });
 
-        map.setProjection('albers');
-
-        // load data and add as layer
-        async function geojsonFetch() {
-            let response = await fetch('assets/us-covid-2020-rates.json');
-            let county_data = await response.json();
-
+        async function geojsonFetch() { 
+            // other operations
+            let response = await fetch('assets/us-covid-2020-rates-reg-test.json');
+            let covidData = await response.json();
             map.on('load', function loadingData() {
-                map.addSource('county_data', {
+                // add layer
+                // add legend
+                map.addSource('covidData', {
                     type: 'geojson',
-                    data: county_data
+                    data: covidData
                 });
 
                 map.addLayer({
-                    'id': 'county_data_layer',
+                    'id': 'covidData-layer',
                     'type': 'fill',
-                    'source': 'county_data',
+                    'source': 'covidData',
                     'paint': {
                         'fill-color': [
                             'step',
-                            ['get', 'cases'],
+                            ['get', 'rates'],
                             '#FFEDA0',   // stop_output_0
                             10,          // stop_input_0
                             '#FED976',   // stop_output_1
@@ -151,59 +145,55 @@
                         'fill-opacity': 0.7,
                     }
                 });
+            });   
 
-                const layers = [
-                    '0-9',
-                    '10-19',
-                    '20-49',
-                    '50-99',
-                    '100-199',
-                    '200-499',
-                    '500-999',
-                    '1000 and more'
-                ];
-                const colors = [
-                    '#FFEDA070',
-                    '#FED97670',
-                    '#FEB24C70',
-                    '#FD8D3C70',
-                    '#FC4E2A70',
-                    '#E31A1C70',
-                    '#BD002670',
-                    '#80002670'
-                ];
+            const layers = [
+                '0-9',
+                '10-19',
+                '20-49',
+                '50-99',
+                '100-199',
+                '200-499',
+                '500-999',
+                '1000 and more'
+            ];
+            const colors = [
+                '#FFEDA070',
+                '#FED97670',
+                '#FEB24C70',
+                '#FD8D3C70',
+                '#FC4E2A70',
+                '#E31A1C70',
+                '#BD002670',
+                '#80002670'
+            ];
 
-                // create legend
-                const legend = document.getElementById('legend');
-                legend.innerHTML = "<b>Population Density<br>(cases)</b><br><br>";
+            const legend = document.getElementById('legend');
+            legend.innerHTML = "<b>Number of Covid Cases<br></b><br><br>";
 
+            layers.forEach((layer, i) => {
+                const color = colors[i];
+                const item = document.createElement('div');
+                const key = document.createElement('span');
+                key.className = 'legend-key';
+                key.style.backgroundColor = color;
 
-                layers.forEach((layer, i) => {
-                    const color = colors[i];
-                    const item = document.createElement('div');
-                    const key = document.createElement('span');
-                    key.className = 'legend-key';
-                    key.style.backgroundColor = color;
-
-                    const value = document.createElement('span');
-                    value.innerHTML = `${layer}`;
-                    item.appendChild(key);
-                    item.appendChild(value);
-                    legend.appendChild(item);
-                });
+                const value = document.createElement('span');
+                value.innerHTML = `${layer}`;
+                item.appendChild(key);
+                item.appendChild(value);
+                legend.appendChild(item);
             });
 
             map.on('mousemove', ({point}) => {
-                const state = map.queryRenderedFeatures(point, {
-                    layers: ['county_data_layer']
+                const covidRate = map.queryRenderedFeatures(point, {
+                    layers: ['covidData-layer']
                 });
-                document.getElementById('text-description').innerHTML = state.length ?
-                    `<h3>${state[0].properties.county}</h3><p><strong><em>${state[0].properties.cases}</strong> cases</em></p>` :
-                    `<p>Hover over a county!</p>`;
-            });
+                document.getElementById('text-description').innerHTML = covidRate.length ?
+                    `<h3>${covidRate[0].properties.county}</h3><p><strong><em>${covidRate[0].properties.cases}</strong> Covid Cases</em></p>` :
+                    `<p>Hover over a state!</p>`;
+            });  
         }
-
-        // Call the function to fetch GeoJSON data and load the map
         geojsonFetch();
     </script>
 

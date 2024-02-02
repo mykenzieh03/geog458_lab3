@@ -75,10 +75,11 @@
         let map = new mapboxgl.Map({
             container: 'map', // container ID
             style: 'mapbox://styles/mapbox/dark-v10',
-            zoom: 5, // starting zoom
+            zoom: 3, // starting zoom
             minZoom: 4, // minimum zoom level of the map
-            center: [-74.5, 40] // starting center
+            center: [-98.5795, 39.8283]  // starting center
         });
+        map.setProjection('albers');
         const grades = [1000, 5000, 25000],
             colors = ['rgb(208,209,230)', 'rgb(103,169,207)', 'rgb(1,108,89)'],
             radii = [5, 15, 20];
@@ -95,7 +96,7 @@
                 'id': 'us-covid-2020-counts-point',
                 'type': 'circle',
                 'source': 'us-covid-2020-counts',
-                'minzoom': 5,
+                'minzoom': 2,
                 'paint': {
                     // increase the radii of the circle as mag value increases
                     'circle-radius': {
@@ -124,14 +125,14 @@
             map.on('click', 'us-covid-2020-counts-point', (event) => {
                 new mapboxgl.Popup()
                     .setLngLat(event.features[0].geometry.coordinates)
-                    .setHTML(`<strong>cases:</strong> ${event.features[0].properties.cases}`)
+                    .setHTML(`<strong>county:</strong> ${event.features[0].properties.county}<strong> cases: </strong>${event.features[0].properties.cases}`)
                     .addTo(map);
             });
         });
         // create legend
         const legend = document.getElementById('legend');
         //set up legend grades and labels
-        var labels = ['<strong>cases</strong>'],
+        var labels = ['<strong>Number of Cases</strong>'],
             vbreak;
         //iterate through grades and create a scaled circle and label for each
         for (var i = 0; i < grades.length; i++) {
@@ -147,7 +148,7 @@
         }
         // add the data source
         const source =
-            '<p style="text-align: right; font-size:10pt">Source: <a href="https://earthquake.usgs.gov/earthquakes/">USGS</a></p>';
+            '<p style="text-align: right; font-size:10pt">Source: <a href="https://github.com/nytimes/covid-19-data/blob/43d32dde2f87bd4dafbb7d23f5d9e878124018b8/live/us-counties.csv">New York Times</a></p>';
         // combine all the html codes.
         legend.innerHTML = labels.join('') + source;
     </script>
