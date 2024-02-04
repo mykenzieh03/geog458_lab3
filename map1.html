@@ -65,7 +65,7 @@
             padding: 10px;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
             line-height: 18px;
-            height: 210px;
+            height: 250px;
             margin-bottom: 40px;
             width: 150px;
         }
@@ -107,7 +107,7 @@
 
         async function geojsonFetch() { 
             // other operations
-            let response = await fetch('assets/us-covid-2020-rates-reg-test.json');
+            let response = await fetch('assets/us-covid-2020-rates.json');
             let covidData = await response.json();
             map.on('load', function loadingData() {
                 // add layer
@@ -125,21 +125,21 @@
                         'fill-color': [
                             'step',
                             ['get', 'rates'],
-                            '#FFEDA0',   // stop_output_0
-                            10,          // stop_input_0
-                            '#FED976',   // stop_output_1
-                            20,          // stop_input_1
-                            '#FEB24C',   // stop_output_2
-                            50,          // stop_input_2
-                            '#FD8D3C',   // stop_output_3
-                            100,         // stop_input_3
-                            '#FC4E2A',   // stop_output_4
-                            200,         // stop_input_4
-                            '#E31A1C',   // stop_output_5
-                            500,         // stop_input_5
-                            '#BD0026',   // stop_output_6
-                            1000,        // stop_input_6
-                            "#800026"    // stop_output_7
+                            '#F2EBFE',   // Lightest purple
+                            10,
+                            '#DACBFE',
+                            20,
+                            '#BFA0F5',
+                            50,
+                            '#9F7AEA',
+                            100,
+                            '#805AD5',
+                            200,
+                            '#6633C1',
+                            500,
+                            '#51279B',
+                            1000,
+                            '#341C75'    // Darkest purple
                         ],
                         'fill-outline-color': '#BBBBBB',
                         'fill-opacity': 0.7,
@@ -158,18 +158,19 @@
                 '1000 and more'
             ];
             const colors = [
-                '#FFEDA070',
-                '#FED97670',
-                '#FEB24C70',
-                '#FD8D3C70',
-                '#FC4E2A70',
-                '#E31A1C70',
-                '#BD002670',
-                '#80002670'
+                '#F2EBFE',
+                '#DACBFE',
+                '#BFA0F5',
+                '#9F7AEA',
+                '#805AD5',
+                '#6633C1',
+                '#51279B',
+                '#341C75'
             ];
 
             const legend = document.getElementById('legend');
-            legend.innerHTML = "<b>Number of Covid Cases<br></b><br><br>";
+            legend.innerHTML = "<b>Number of Covid Cases<br></b>" +
+                  '<b style="text-align: right; font-size:10pt">Source: <a href="https://data.census.gov/table/ACSDP5Y2018.DP05?g=0100000US$050000&d=ACS%205-Year%20Estimates%20Data%20Profiles&hidePreview=true">2018 ACS 5 Year Estimates</a></b>';
 
             layers.forEach((layer, i) => {
                 const color = colors[i];
@@ -191,10 +192,11 @@
                 });
                 document.getElementById('text-description').innerHTML = covidRate.length ?
                     `<h3>${covidRate[0].properties.county}</h3><p><strong><em>${covidRate[0].properties.cases}</strong> Covid Cases</em></p>` :
-                    `<p>Hover over a state!</p>`;
+                    `<p>Hover over a County!</p>`;
             });  
         }
         geojsonFetch();
+        // Update the legend content
     </script>
 
 </body>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -16,9 +16,20 @@
 
         #map {
             position: absolute;
-            top: 0;
+            top: 50px; /* Adjusted to leave space for the title */
             bottom: 0;
             width: 100%;
+            margin-top: 20px; /* Add a top margin to separate the title and map */
+        }
+
+        #title {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            font-size: 12px;
+            font-family: 'Open Sans', sans-serif;
         }
 
         /* the layout of the legend panel */
@@ -67,6 +78,9 @@
 </head>
 
 <body>
+    <div id="title">
+        <h1>Covid Cases in the United States 2020</h1>
+    </div>
     <div id="map"></div>
     <div id="legend"></div>
     <script>
@@ -81,8 +95,8 @@
         });
         map.setProjection('albers');
         const grades = [1000, 5000, 25000],
-            colors = ['rgb(208,209,230)', 'rgb(103,169,207)', 'rgb(1,108,89)'],
-            radii = [5, 15, 20];
+            colors = ['#F2EBFE', '#BFA0F5', '#6633C1'];
+            radii = [2.5, 7.5, 10];
         //load data to the map as new layers.
         //map.on('load', function loadingData() {
         map.on('load', () => { //simplifying the function statement: arrow with brackets to define a function
@@ -111,9 +125,9 @@
                     'circle-color': {
                         'property': 'cases',
                         'stops': [
-                            [grades[0], colors[0]],
-                            [grades[1], colors[1]],
-                            [grades[2], colors[2]]
+                        [grades[0], '#F2EBFE'],   // Lightest purple
+                        [grades[1], '#BFA0F5'],
+                        [grades[2], '#6633C1']    // Darkest purple
                         ]
                     },
                     'circle-stroke-color': 'white',
@@ -146,6 +160,9 @@
                 dot_radii + 'px; "></i> <span class="dot-label" style="top: ' + dot_radii / 2 + 'px;">' + vbreak +
                 '</span></p>');
         }
+
+// Update the legend content
+legend.innerHTML = labels.join('');
         // add the data source
         const source =
             '<p style="text-align: right; font-size:10pt">Source: <a href="https://github.com/nytimes/covid-19-data/blob/43d32dde2f87bd4dafbb7d23f5d9e878124018b8/live/us-counties.csv">New York Times</a></p>';
